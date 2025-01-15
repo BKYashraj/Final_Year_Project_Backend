@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const userSchema = new mongoose.Schema({
+const bcrypt = require('bcrypt');
+const farmerSchema = new mongoose.Schema({
     firstName: {
         type: String,
         required: [true, "First Name is required"],
@@ -48,5 +49,11 @@ const userSchema = new mongoose.Schema({
 }, {
     timestamps: true
 });
+
+farmerSchema.pre('save', async function () {
+    const hashedPassword = await bcrypt.hash(this.password, 10);
+    this.password = hashedPassword;
+});
+
 const Farmer = mongoose.model("Farmer", farmerSchema); // collection
 module.exports = Farmer;

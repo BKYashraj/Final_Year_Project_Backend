@@ -1,9 +1,8 @@
-// yashrajdesale1
-// vwY1CUU1RE6vTvjL
 const express = require('express')  // dependancies call 
 const bodyParser = require('body-parser')
 const ServerConfig = require('./config/serverConfig')
 const connectDB = require('./config/dbConfig')
+const farmerRouter = require('./routes/farmerRoute')
 
 const app = express() // Got express server object
 
@@ -16,6 +15,8 @@ app.use(bodyParser.urlencoded());
 app.post('/ping', (req, res) => {
   return res.json({message:"pong"})
 });
+
+app.use('/farmers', farmerRouter);
 
 app.listen(ServerConfig.PORT, async () => {
   await connectDB();
