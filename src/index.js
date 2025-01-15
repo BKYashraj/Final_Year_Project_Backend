@@ -15,9 +15,6 @@ app.listen(ServerConfig.PORT, async () => {
   console.log(`Example app listening on port ${ServerConfig.PORT}...`)
 })
 
-
-
-
 // git remote add new-origin <new_repository_url>
 // git fetch origin
 // git push new-origin --all
