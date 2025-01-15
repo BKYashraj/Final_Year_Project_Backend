@@ -3,20 +3,27 @@ const bodyParser = require('body-parser')
 const ServerConfig = require('./config/serverConfig')
 const connectDB = require('./config/dbConfig')
 const farmerRouter = require('./routes/farmerRoute')
-
+const cookieParser = require('cookie-parser')
+const authRouter = require('./routes/authRoute')
 const app = express() // Got express server object
 
 // If request is in JSON, text, urlencoded it correctly reads by Express Server
 app.use(bodyParser.json());
 app.use(bodyParser.text());
 app.use(bodyParser.urlencoded());
-
+app.use(cookieParser());
 
 app.post('/ping', (req, res) => {
+  console.log('Auth Token:', req.cookies);
   return res.json({message:"pong"})
 });
 
+
+
 app.use('/farmers', farmerRouter);
+app.use('/auth', authRouter);
+
+
 
 app.listen(ServerConfig.PORT, async () => {
   await connectDB();
