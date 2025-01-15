@@ -10,6 +10,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.text());
 app.use(bodyParser.urlencoded());
 
+
 app.listen(ServerConfig.PORT, async () => {
   await connectDB();
   console.log(`Example app listening on port ${ServerConfig.PORT}...`)
