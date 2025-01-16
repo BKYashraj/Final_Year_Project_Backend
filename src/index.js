@@ -14,7 +14,8 @@ const app = express() // Got express server object
 // If request is in JSON, text, urlencoded it correctly reads by Express Server
 app.use(bodyParser.json());
 app.use(bodyParser.text());
-app.use(bodyParser.urlencoded());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use(cookieParser());
 app.use(cors({
   origin: ServerConfig.ORIGIN_LINK,
@@ -22,6 +23,7 @@ app.use(cors({
   allowedHeaders: ["Content-Type"],
   credentials: true,
 }));
+
 
 app.post('/ping', (req, res) => {
   console.log('Auth Token:', req.cookies);
