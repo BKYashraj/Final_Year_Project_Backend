@@ -4,7 +4,7 @@ const farmerSchema = new mongoose.Schema({
     firstName: {
         type: String,
         required: [true, "First Name is required"],
-        minlength: [5, "First name must be atleast 5 character long"],
+        minlength: [2, "First name must be atleast 5 character long"],
         lowercase: true,
         trim: true, // if the user gives extra spaces then it will automatically remove it
         maxlength: [20, "First name should be less than or equal to 20 characters"]
@@ -12,7 +12,7 @@ const farmerSchema = new mongoose.Schema({
     lastName: {
         type: String,
         required: [true, "First Name is required"],
-        minlength: [5, "First name must be atleast 5 character long"],
+        minlength: [2, "First name must be atleast 5 character long"],
         lowercase: true,
         trim: true, // if the user gives extra spaces then it will automatically remove it
         maxlength: [20, "First name should be less than or equal to 20 characters"]
@@ -40,7 +40,7 @@ const farmerSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ["Farmer","Ethanol Producing Factory","ADMIN"],
+        enum: ["Farmer","Ethanol Producing Factory","Distributers","Retailers","End Users", "ADMIN"],
         default: "USER"
     },
     // address: {

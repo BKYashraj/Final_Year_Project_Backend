@@ -1,4 +1,8 @@
-const express = require('express')  // dependancies call 
+const express = require('express')  // dependancies call
+
+const cors = require('cors')
+
+
 const bodyParser = require('body-parser')
 const ServerConfig = require('./config/serverConfig')
 const connectDB = require('./config/dbConfig')
@@ -12,6 +16,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.text());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser());
+app.use(cors({
+  origin: ServerConfig.ORIGIN_LINK,
+  methods: ["GET", "POST", "DELETE", "PUT"],
+  allowedHeaders: ["Content-Type"],
+  credentials: true,
+}));
 
 app.post('/ping', (req, res) => {
   console.log('Auth Token:', req.cookies);
