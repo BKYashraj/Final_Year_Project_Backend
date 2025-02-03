@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose');//Sanika
 const bcrypt = require('bcrypt');
 const farmerSchema = new mongoose.Schema({
     firstName: {
