@@ -19,17 +19,18 @@ async function registerDistributor(distributorDetails) {
   const newDistributor = await createDistributor({
     distributorName: distributorDetails.distributorName,
     distributorAddress: distributorDetails.distributorAddress,
-    contactPerson: distributorDetails.contactPerson,
-    contactNumber: distributorDetails.contactNumber,
-    email: distributorDetails.email,
-    distributorRegistrationNumber: distributorDetails.distributorRegistrationNumber,
-    gstNumber: distributorDetails.gstNumber,
+    contactPersonName: distributorDetails.distributorContactPerson,
+    contactNumber: distributorDetails.distributorContactNumber,
+    email: distributorDetails.distributorEmail,
+    password:distributorDetails.distributorPassword,
+    distributorRegNumber: distributorDetails.distributorRegNo,
+    gstNumber: distributorDetails.distributorGstNo,
     productsRequiringEthanol: distributorDetails.productsRequiringEthanol,
     monthlyEthanolRequirement: distributorDetails.monthlyEthanolRequirement,
     preferredEthanolType: distributorDetails.preferredEthanolType,
-    licensesAndApprovals: distributorDetails.licensesAndApprovals,
-    numberOfExistingFactories: distributorDetails.numberOfExistingFactories,
-    newFactoriesRequirement: distributorDetails.newFactoriesRequirement,
+    licensesAndCompliance: distributorDetails.licenses,
+    numberOfExistingFactories: distributorDetails.existingFactories,
+    
   });
 
   if (!newDistributor) {

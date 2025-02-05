@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
+
 
 const distributorSchema = new mongoose.Schema({
     distributorName: {
@@ -66,9 +68,8 @@ const distributorSchema = new mongoose.Schema({
         required: [true, "Products Requiring Ethanol are required"]
     },
     licensesAndCompliance: {
-        exciseLicense: { type: Boolean, required: [true, "Excise License status is required"] },
-        pollutionControlLicense: { type: Boolean, required: [true, "Pollution Control License status is required"] },
-        otherLicenses: { type: String, trim: true }
+        type: String,
+        required: [true, "License is required"]
     },
     numberOfExistingFactories: {
         type: Number,
