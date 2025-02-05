@@ -4,4 +4,6 @@ const factoryRouter = express.Router();
 
 factoryRouter.post('/', createFactory);
 
+
+
 module.exports = factoryRouter;
