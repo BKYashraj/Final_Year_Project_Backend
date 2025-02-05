@@ -18,10 +18,17 @@ async function registerFarmer(userDetails) {
   const newUser = await createFarmer({
     email: userDetails.email,
     password: userDetails.password,
-    firstName: userDetails.firstName,
-    lastName: userDetails.lastName,
+    fullName: userDetails.name,
     mobileNumber: userDetails.mobileNumber,
     role: userDetails.role,
+    aadharNumber:userDetails.aadhar,
+    farmerId:userDetails.farmerId,
+    gatNo:userDetails.gatNo,
+    state:userDetails.state,
+    district:userDetails.district,
+    totalLandArea:userDetails.totalLandArea,
+    production: Array.isArray(userDetails.cropTypes) ? userDetails.cropTypes : [],
+    address:userDetails.address,
   });
   if (!newUser) {
     throw {

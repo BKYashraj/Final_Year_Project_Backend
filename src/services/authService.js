@@ -1,49 +1,74 @@
-const { findFarmer } = require("../repositories/farmerRepository");
-
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET, JWT_EXPIRY } = require("../config/serverConfig");
-async function loginUser(authDetails) {
-  
+
+// Import repositories for different user roles
+const { findFarmer } = require("../repositories/farmerRepository");
+const { findFactory } = require("../repositories/factoryRepository");
+const { findDistributor } = require("../repositories/distributorRepository");
+
+// Function to find user dynamically based on role
+async function findUser(authDetails) {
   const email = authDetails.email;
-  const plainPassword = authDetails.password;
-  // 1. We need to check if the user with this email already exists or not
-  const user = await findFarmer({ email });
-  if (!user) {
+
+  // Check in each collection
+  let user = await findFarmer({ email });
+  if (user) return { user, role: "Farmer" };
+
+  user = await findFactory({ email });
+  if (user) return { user, role: "Ethanol Producing Factory" };
+
+  user = await findDistributor({ email });
+  if (user) return { user, role: "Distributor" };
+
+  return null; // User not found in any collection
+}
+
+// Generic Login Function for All Users
+async function loginUser(authDetails) {
+  const { email, password } = authDetails;
+
+  // Find user from any of the collections
+  const userData = await findUser({ email });
+  if (!userData) {
     throw {
       statusCode: 404,
       message: "User does not exist",
     };
   }
-  // 2. If the user is found we need to compare plianIncomingPassword with hashed Password
-  const isPasswordValid = await bcrypt.compare(plainPassword, user.password);
+
+  const { user, role } = userData;
+
+  // Compare passwords
+  const isPasswordValid = await bcrypt.compare(password, user.password);
   if (!isPasswordValid) {
     throw {
       statusCode: 401,
       message: "Invalid Password",
     };
   }
-  const userRole = user.role ? user.role : "Farmer";
-  // 3. If the password is valid, then we need to return the user object
+
+  // Generate JWT token
   const token = jwt.sign(
     {
       email: user.email,
       id: user.id,
-      role: userRole,
+      role: role,
     },
     JWT_SECRET,
     { expiresIn: JWT_EXPIRY }
   );
-  console.log("Token is ",token);
+
   return {
     token,
-    userRole,
+    userRole: role,
     userData: {
       email: user.email,
-      firstName: user.firstName,
+      name: user.firstName || user.factoryName || user.distributorName, // Dynamic name field
     },
   };
 }
+
 module.exports = {
   loginUser,
 };

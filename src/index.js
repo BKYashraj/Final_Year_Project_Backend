@@ -7,6 +7,7 @@ const bodyParser = require('body-parser')
 const ServerConfig = require('./config/serverConfig')
 const connectDB = require('./config/dbConfig')
 const farmerRouter = require('./routes/farmerRoute')
+const factoryRouter = require('./routes/factoryRoute')
 const cookieParser = require('cookie-parser')
 const authRouter = require('./routes/authRoute')
 const app = express() // Got express server object
@@ -33,6 +34,8 @@ app.post('/ping', (req, res) => {
 
 
 app.use('/farmers', farmerRouter);
+app.use('/factory', factoryRouter);
+
 app.use('/auth', authRouter);
 
 
