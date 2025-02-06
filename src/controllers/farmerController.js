@@ -1,5 +1,6 @@
-const { registerFarmer } = require("../services/farmerService");
+const { registerFarmer, AppFactory } = require("../services/farmerService");
 const Farmer = require("../schema/farmerSchema.js"); 
+const { AppFarmer } = require("../repositories/farmerRepository.js");
 
 async function createFarmer(req, res) {
   try {
@@ -23,7 +24,7 @@ async function createFarmer(req, res) {
 
 async function getAllFarmers(req, res) {
   try {
-    const farmers = await Farmer.find({}).limit(12); // ✅ Use the model to query
+    const farmers = await Farmer.find({}).limit(20); // ✅ Use the model to query
     res.status(200).send({
       success: true,
       countTotal: farmers.length,
@@ -39,9 +40,58 @@ async function getAllFarmers(req, res) {
   }
 }
 
+async function approveFarmer(req, res) {
+  try {
+    console.log(req.body);
+    const response = await AppFarmer(req.body);
+    return res.json({
+      message: "Successfully Done",
+      success: true,
+      data: response,
+      error: {},
+    });
+  } catch (error) {
+    // Determine the status code to use
+    const statusCode = (error.statusCode >= 100 && error.statusCode < 600) ? error.statusCode : 500;
+
+    return res.status(statusCode).json({
+      success: false,
+      message: error.reason || "An unexpected error occurred.",
+      data: {},
+      error: error,
+    });
+  }
+}
+
+
+async function getApprovedFactory(req, res) {
+  try {
+    console.log(req.body);
+    const farmerId = req.params.id;
+    const response = await AppFactory(farmerId, res);
+    return res.json({
+      message: "Successfully Done",
+      success: true,
+      data: response,
+      error: {},
+    });
+  } catch (error) {
+    // Determine the status code to use
+    const statusCode = (error.statusCode >= 100 && error.statusCode < 600) ? error.statusCode : 500;
+
+    return res.status(statusCode).json({
+      success: false,
+      message: error.reason || "An unexpected error occurred.",
+      data: {},
+      error: error,
+    });
+  }
+}
 
 
 module.exports = {
   createFarmer,
-  getAllFarmers
+  getAllFarmers,
+  approveFarmer,
+  getApprovedFactory
 }

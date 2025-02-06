@@ -88,9 +88,23 @@ const farmerSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ["Farmer"," Factory","Distributers","ADMIN1"],
+        enum: ["Farmer","Factory","Distributers","ADMIN1"],
         default: "USER"
     },
+    approvedFactories: [
+        {
+            factoryId: { type: mongoose.Schema.Types.ObjectId, ref: 'Factory' },
+            status: {
+                type: String,
+                enum: ["pending", "approved", "rejected"],
+                default: "pending"
+            },
+            approvedAt: {
+                type: Date,
+                default: null
+            }
+        }
+    ]
 }, {
     timestamps: true
 });

@@ -2,7 +2,8 @@ const Distributor = require("../schema/distributorSchema");
 
 async function findDistributor(parameters) {
   try {
-    const response = await Distributor.findOne({ ...parameters });
+    const { email } = parameters;
+    const response = await Distributor.findOne({ email });
     return response;
   } catch (error) {
     console.log(error);

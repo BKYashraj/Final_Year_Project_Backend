@@ -1,4 +1,6 @@
 const { findFarmer, createFarmer } = require("../repositories/farmerRepository");
+const Factory = require("../schema/factorySchema");
+const Farmer = require("../schema/farmerSchema");
 
 async function registerFarmer(userDetails) {
   // It will create a brand new user in the db
@@ -40,6 +42,32 @@ async function registerFarmer(userDetails) {
   return newUser;
 }
 
+async function AppFactory(farmerId, res) {
+  try {
+    // Step 1: Find the farmer and populate factoryId
+    const farmer = await Farmer.findById(farmerId).populate('approvedFactories.factoryId');
+
+    if (!farmer) {
+      return res.status(404).json({ message: 'Farmer not found' });
+    }
+
+    // Step 2: Extract all factory IDs
+    const factoryIds = farmer.approvedFactories.map(entry => entry.factoryId._id);
+
+    // Step 3: Fetch factory data from the Factory schema
+    const factories = await Factory.find({ _id: { $in: factoryIds } });
+
+    // Step 4: Return the farmer and factory data
+    return { factories };
+  } catch (error) {
+    console.error('Error fetching farmer:', error);
+    return res.status(500).json({ message: 'Server error' });
+  }
+}
+
+
+
 module.exports = {
   registerFarmer,
+  AppFactory
 }

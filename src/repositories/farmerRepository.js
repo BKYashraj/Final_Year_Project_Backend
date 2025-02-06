@@ -2,7 +2,8 @@ const Farmer = require("../schema/farmerSchema");
 
 async function findFarmer(parameters) {
   try {
-    const response = await Farmer.findOne({ ...parameters });
+    const response = await Farmer.findOne(parameters);
+    console.log("Res",response)
     return response;
   } catch (error) {
     console.log(error);
@@ -17,7 +18,44 @@ async function createFarmer(userDetails) {
   }
 }
 
+async function AppFarmer({ farmerId, factoryId }) {
+  // Find the farmer by ID
+  const farmer = await Farmer.findById(farmerId);
+
+  // Check if the farmer exists
+  if (!farmer) {
+    const error = new Error('Farmer not found');
+    error.statusCode = 404;
+    throw error;
+  }
+
+  // Check if the factory is already in the approvedFactories array
+  const alreadyExists = farmer.approvedFactories.some(
+    (factory) => factory.factoryId.toString() === factoryId
+  );
+
+  if (alreadyExists) {
+    const error = new Error('Factory already added!');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  // Add the new factory to the approvedFactories array
+  Farmer.approvedFactories.push({
+    factoryId,
+    status: 'pending', // default status
+  });
+
+  // Save the updated farmer document
+  await farmer.save();
+
+  return farmer;
+}
+
+
+
 module.exports = {
   findFarmer,
-  createFarmer
+  createFarmer,
+  AppFarmer
 }

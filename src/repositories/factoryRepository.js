@@ -2,7 +2,10 @@ const Factory = require("../schema/factorySchema");
 
 async function findFactory(parameters) {
   try {
-    const response = await Factory.findOne({ ...parameters });
+    console.log("response",parameters)
+    const { email } = parameters;
+    const response = await Factory.findOne({email});
+    console.log("response",response)
     return response;
   } catch (error) {
     console.log(error);

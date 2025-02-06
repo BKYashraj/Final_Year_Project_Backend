@@ -2,6 +2,7 @@ const { loginUser } = require("../services/authService");
 async function login(req, res) {
   try {
     const loginPayload = req.body;
+    console.log(loginPayload);
     const response = await loginUser(loginPayload);
     // After User login, we send JWT token in the form of cookie to user, so next time when he use any functionality he send this cookie to server then server gives direct access to the user for that functionality.
     console.log("Response token is ",response.token);
