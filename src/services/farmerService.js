@@ -42,28 +42,30 @@ async function registerFarmer(userDetails) {
   return newUser;
 }
 
-async function AppFactory(farmerId, res) {
+async function AppFactory(farmerId) {
   try {
-    // Step 1: Find the farmer and populate factoryId
+    // Step 1: Find the farmer and populate factoryId from the approvedFactories array
     const farmer = await Farmer.findById(farmerId).populate('approvedFactories.factoryId');
 
     if (!farmer) {
-      return res.status(404).json({ message: 'Farmer not found' });
+      return { success: false, message: 'Farmer not found' }; // Return if farmer not found
     }
 
-    // Step 2: Extract all factory IDs
-    const factoryIds = farmer.approvedFactories.map(entry => entry.factoryId._id);
+    // Step 2: Extract all factory IDs from the approvedFactories array
+    // const factoryIds = farmer.approvedFactories.map(entry => entry.factoryId); // Correctly extract factoryId
+    const factoryIds = farmer.approvedFactories.map(entry => entry.factoryId); // Correctly extract factoryId
 
     // Step 3: Fetch factory data from the Factory schema
     const factories = await Factory.find({ _id: { $in: factoryIds } });
-
-    // Step 4: Return the farmer and factory data
-    return { factories };
+console.log(factories)
+    // Step 4: Return both the farmer and factory data
+    return { success: true, factories }; // Return the array of factories
   } catch (error) {
     console.error('Error fetching farmer:', error);
-    return res.status(500).json({ message: 'Server error' });
+    return { success: false, message: 'Server error' }; // Error handling
   }
 }
+
 
 
 

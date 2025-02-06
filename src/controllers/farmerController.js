@@ -69,7 +69,9 @@ async function getApprovedFactory(req, res) {
   try {
     console.log(req.body);
     const farmerId = req.params.id;
-    const response = await AppFactory(farmerId, res);
+    console.log(farmerId);
+    const response = await AppFactory(farmerId);
+    console.log(response);
     return res.json({
       message: "Successfully Done",
       success: true,
