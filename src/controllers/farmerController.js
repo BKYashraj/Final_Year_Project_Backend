@@ -42,8 +42,9 @@ async function getAllFarmers(req, res) {
 
 async function approveFarmer(req, res) {
   try {
-    console.log(req.body);
-    const response = await AppFarmer(req.body);
+    const { farmerId, factoryId } = req.body;
+    console.log("check it ",farmerId,factoryId);
+    const response = await AppFarmer(farmerId,factoryId);
     return res.json({
       message: "Successfully Done",
       success: true,

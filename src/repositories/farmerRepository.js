@@ -18,8 +18,10 @@ async function createFarmer(userDetails) {
   }
 }
 
-async function AppFarmer({ farmerId, factoryId }) {
+async function AppFarmer(farmerId, factoryId) {
   // Find the farmer by ID
+  console.log("Yashraj");
+  console.log(farmerId, factoryId);
   const farmer = await Farmer.findById(farmerId);
 
   // Check if the farmer exists
@@ -41,7 +43,7 @@ async function AppFarmer({ farmerId, factoryId }) {
   }
 
   // Add the new factory to the approvedFactories array
-  Farmer.approvedFactories.push({
+  farmer.approvedFactories.push({
     factoryId,
     status: 'pending', // default status
   });
