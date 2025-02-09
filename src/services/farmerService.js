@@ -31,6 +31,8 @@ async function registerFarmer(userDetails) {
     totalLandArea:userDetails.totalLandArea,
     production: Array.isArray(userDetails.cropTypes) ? userDetails.cropTypes : [],
     address:userDetails.address,
+    bankAccount: userDetails.bankAccount,
+    ifsc:userDetails.ifsc
   });
   if (!newUser) {
     throw {

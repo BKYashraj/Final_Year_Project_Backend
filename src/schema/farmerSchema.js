@@ -104,7 +104,23 @@ const farmerSchema = new mongoose.Schema({
                 default: null
             }
         }
-    ]
+    ],
+
+    bankAccount: {
+        type: String,
+        required: [true, "Bank account number is required"]
+    //     match: [/^\d{9,18}$/, "Bank account number must be 9 to 18 digits long"]
+    },
+    ifsc: {
+        type: String,
+        required: [true, "IFSC code is required"]
+        // match: [/^[A-Z]{4}0[A-Z0-9]{6}$/, "Enter a valid IFSC code"]
+    },
+    fundAccountId: {
+        type: String, // Store Razorpay's fund account ID
+        required: false
+    },
+
 }, {
     timestamps: true
 });

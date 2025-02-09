@@ -5,6 +5,7 @@ const { AppFarmer } = require("../repositories/farmerRepository.js");
 async function createFarmer(req, res) {
   try {
     const response = await registerFarmer(req.body);
+    
     return res.json({
       message: "Successfully registered the farmer",
       success: true,
@@ -92,9 +93,13 @@ async function getApprovedFactory(req, res) {
 }
 
 
+
+
+
+
 module.exports = {
   createFarmer,
   getAllFarmers,
   approveFarmer,
-  getApprovedFactory
+  getApprovedFactory,
 }

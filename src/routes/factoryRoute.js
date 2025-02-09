@@ -1,8 +1,11 @@
 const express = require('express');  // dependencies call
-const { createFactory } = require('../controllers/factoryController');
+const { createFactory, getFarmersByFactory } = require('../controllers/factoryController');
 const factoryRouter = express.Router();
 
 factoryRouter.post('/', createFactory);
+
+factoryRouter.get('/getApprovedFarmer/:id', getFarmersByFactory);
+// farmerRouter.get('/:id',getApprovedFactory);
 
 
 
