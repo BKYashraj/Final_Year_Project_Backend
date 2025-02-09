@@ -6,6 +6,7 @@ const Farmer = require("../schema/farmerSchema");
 const crypto = require('crypto');
 const dotenv = require('dotenv');
 const axios = require('axios');
+const TransparencyFacToFar = require("../schema/transparancyFactoryToFarmer");
 
 const abi = require('../blockchain/contractABI.json');
 
@@ -115,6 +116,19 @@ paymentRouter.post('/verify', async (req, res) => {
                 // Wait for the transaction to be mined
                 const receipt = await tx.wait();
                 console.log(`Transaction confirmed in block: ${receipt.blockNumber}`);
+
+                const transactionHash = tx.hash;
+                const blockNo = receipt.blockNumber;
+
+                const transparency = new TransparencyFacToFar({
+                    farmerId,
+                    factoryId,
+                    transactionHash,
+                    blockNo
+                });
+
+                await transparency.save();
+
 
                 return receipt;
             } catch (error) {
