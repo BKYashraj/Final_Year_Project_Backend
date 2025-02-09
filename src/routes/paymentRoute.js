@@ -7,6 +7,24 @@ const crypto = require('crypto');
 const dotenv = require('dotenv');
 const axios = require('axios');
 
+const abi = require('../blockchain/contractABI.json');
+
+const { ethers } = require('ethers');
+
+// Environment variables
+const SEPOLIA_URL = process.env.SEPOLIA_URL;
+const PRIVATE_KEY = process.env.PRIVATE_KEY;
+const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS;
+
+
+// ABI of the smart contract
+const contractABI = abi.abi;
+
+// Connect to the Ethereum network
+const provider = new ethers.JsonRpcProvider(SEPOLIA_URL);
+const wallet = new ethers.Wallet(PRIVATE_KEY, provider);
+const contract = new ethers.Contract(CONTRACT_ADDRESS, contractABI, wallet);
+
 dotenv.config();
 
 const paymentRouter = express.Router();
@@ -83,12 +101,41 @@ paymentRouter.post('/verify', async (req, res) => {
 
 
         const transaction = await Transaction.findOne({ paymentId: razorpay_order_id });
+
+        // blockchain 
+
+        async function createBlock(data) {
+            try {
+                const factoryAddress = "0x2A6E75985EF4280fC823dcdb9cE7946Cb5A67e9c"
+                const sugarcaneInTons = 100;
+                const pricePerTon = 3000;
+                const tx = await contract.createTransaction(factoryAddress, sugarcaneInTons, pricePerTon);
+                console.log(`Transaction sent: ${tx.hash}`);
+
+                // Wait for the transaction to be mined
+                const receipt = await tx.wait();
+                console.log(`Transaction confirmed in block: ${receipt.blockNumber}`);
+
+                return receipt;
+            } catch (error) {
+                console.error("Error creating block:", error);
+                throw error;
+            }
+        }
+
         if (transaction) {
+            try {
+                const receipt = await createBlock();
+                console.log(`Block created successfully in block number: ${receipt.blockNumber}`);
+            } catch (error) {
+                console.error("Failed to create block:", error);
+            }
+
             transaction.status = "paid";
             await transaction.save();
 
             // Automate Payout
-            await processPayout(transaction);
+            // await processPayout(transaction);
         }
 
         res.json({ message: "Payment Verified & Payout Initiated" });
@@ -146,7 +193,7 @@ async function processPayout(transaction) {
         }
 
         // Use test fund account in test mode
-        let fundAccountId = process.env.RAZORPAY_KEY_ID.startsWith("rzp_test_") 
+        let fundAccountId = process.env.RAZORPAY_KEY_ID.startsWith("rzp_test_")
             ? TEST_FUND_ACCOUNT_ID
             : farmer.fundAccountId;
 
@@ -164,7 +211,7 @@ async function processPayout(transaction) {
         }
 
         // Use a predefined test Razorpay account number in test mode
-        const accountNumber = process.env.RAZORPAY_KEY_ID.startsWith("rzp_test_") 
+        const accountNumber = process.env.RAZORPAY_KEY_ID.startsWith("rzp_test_")
             ? TEST_ACCOUNT_NUMBER
             : process.env.COMPANY_ACCOUNT_NUMBER;
 
@@ -184,6 +231,7 @@ async function processPayout(transaction) {
         // Send payout request
         const response = await axios.post(
             "https://api.razorpay.com/v1/payouts",
+            // dummy 
             payoutPayload,
             {
                 auth: {
