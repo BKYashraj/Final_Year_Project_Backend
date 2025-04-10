@@ -1,9 +1,12 @@
 import os
 import sys
+# Example: inside `predict.py` or `main.py`
+from flask import Flask
 import numpy as np
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 
+app = Flask(__name__)
 # Suppress TensorFlow INFO logs (optional)
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
