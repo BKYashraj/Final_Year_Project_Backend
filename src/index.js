@@ -10,6 +10,7 @@ const farmerRouter = require('./routes/farmerRoute')
 const factoryRouter = require('./routes/factoryRoute')
 const distributorRouter = require('./routes/distributorRoute')
 const paymentRouter = require('./routes/paymentRoute')
+const predictRoute = require("./routes/predictRoute.js");
 const cookieParser = require('cookie-parser')
 const authRouter = require('./routes/authRoute')
 const app = express() // Got express server object
@@ -41,7 +42,7 @@ app.use('/distributor', distributorRouter);
 app.use('/payment', paymentRouter);
 
 app.use('/auth', authRouter);
-
+app.use("/api", predictRoute);
 
 
 app.listen(ServerConfig.PORT, async () => {
