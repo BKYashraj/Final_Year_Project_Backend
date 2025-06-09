@@ -1,6 +1,6 @@
 const { registerFarmer, AppFactory } = require("../services/farmerService");
 const Farmer = require("../schema/farmerSchema.js"); 
-const { AppFarmer } = require("../repositories/farmerRepository.js");
+const { AppFarmer, approveFarmerFactory } = require("../repositories/farmerRepository.js");
 
 async function createFarmer(req, res) {
   try {
@@ -43,6 +43,42 @@ async function getAllFarmers(req, res) {
   }
 }
 
+const mongoose = require('mongoose');
+
+async function getAllApprovedFarmers(req, res) {
+  try {
+  
+// const factoryId = '6845c290a374c6530dd6e925'; // Use req.body.factoryId or req.user._id if needed
+const factoryId = req.params.id;
+// console.log("abcdefg",factory)
+const farmers2 = await Farmer.find({
+  approvedFactories: {
+    $elemMatch: {
+      factoryId: new mongoose.Types.ObjectId(factoryId),
+      status: "approved"
+    }
+  }
+}).limit(20);
+
+
+    res.status(200).send({
+      success: true,
+      countTotal: farmers2.length,
+      message: "Approved Farmers for this Factory",
+      farmers2,
+    });
+  } catch (error) {
+    console.error("Error in getAllApprovedFarmers:", error);
+    res.status(500).send({
+      success: false,
+      message: "Error in getting approved farmers",
+      error: error.message,
+    });
+  }
+}
+
+
+
 async function approveFarmer(req, res) {
   try {
     const { farmerId, factoryId } = req.body;
@@ -67,6 +103,29 @@ async function approveFarmer(req, res) {
   }
 }
 
+async function approveFarmer2(req, res) {
+  try {
+    const farmerId = req.params.id;
+    console.log("check it ",farmerId);
+    const response = await approveFarmerFactory(farmerId);
+    return res.json({
+      message: "Successfully Done",
+      success: true,
+      data: response,
+      error: {},
+    });
+  } catch (error) {
+    // Determine the status code to use
+    const statusCode = (error.statusCode >= 100 && error.statusCode < 600) ? error.statusCode : 500;
+
+    return res.status(statusCode).json({
+      success: false,
+      message: error.reason || "An unexpected error occurred.",
+      data: {},
+      error: error,
+    });
+  }
+}
 
 async function getApprovedFactory(req, res) {
   try {
@@ -104,4 +163,6 @@ module.exports = {
   getAllFarmers,
   approveFarmer,
   getApprovedFactory,
+  getAllApprovedFarmers,
+  approveFarmer2
 }
