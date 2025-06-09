@@ -25,7 +25,9 @@ async function createFarmer(req, res) {
 
 async function getAllFarmers(req, res) {
   try {
-    const farmers = await Farmer.find({}).limit(20); // ✅ Use the model to query
+    const farmers = await Farmer.find({
+      approvedFactories: { $size: 0 }  // only farmers with no approved factories
+    }).limit(20); // ✅ Use the model to query
     res.status(200).send({
       success: true,
       countTotal: farmers.length,

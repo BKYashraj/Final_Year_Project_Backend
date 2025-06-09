@@ -28,17 +28,32 @@ async function getFarmersByFactory(req, res) {
   try {
     console.log(req.body);
     const factoryId_ = req.params.id;
-    // const factoryObjectId = new mongoose.Types.ObjectId(factoryId_);
 
-    console.log(factoryId_)
+    // Validate if the factoryId is a valid ObjectId
+    if (!mongoose.Types.ObjectId.isValid(factoryId_)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Factory ID",
+        data: {},
+        error: {},
+      });
+    }
+
+    // Convert factoryId to ObjectId
+    const factoryObjectId = new mongoose.Types.ObjectId(factoryId_);
+
+    // Query the Farmers collection
     const response = await Farmer.find({
-      "approvedFactories.factoryId": factoryId_
-  }).limit(20);
-
+  approvedFactories: {
+    $elemMatch: {
+      factoryId: factoryObjectId,
+      status: "Approved"
+    }
+  }
+}).limit(20);
 
 
     console.log(response);
-  
 
     return res.json({
       message: "Successfully Done",
@@ -47,14 +62,15 @@ async function getFarmersByFactory(req, res) {
       error: {},
     });
   } catch (error) {
-    // Determine the status code to use
-    const statusCode = (error.statusCode >= 100 && error.statusCode < 600) ? error.statusCode : 500;
+    console.error("Error fetching farmers:", error);
+
+    const statusCode = error.statusCode >= 100 && error.statusCode < 600 ? error.statusCode : 500;
 
     return res.status(statusCode).json({
       success: false,
       message: error.reason || "An unexpected error occurred.",
       data: {},
-      error: error,
+      error,
     });
   }
 }

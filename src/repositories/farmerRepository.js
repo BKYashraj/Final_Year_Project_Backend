@@ -18,6 +18,11 @@ async function createFarmer(userDetails) {
   }
 }
 
+// this is for Factory when any new farmer register it shows on factory layout 
+// then that factory will accept request which is this approvedFactories
+// It add corresponding factory to that email farmer as 
+// with pending status 
+
 async function AppFarmer(farmerId, factoryId) {
   // Find the farmer by ID
   console.log("Yashraj");
@@ -53,7 +58,6 @@ async function AppFarmer(farmerId, factoryId) {
 
   return farmer;
 }
-
 
 
 module.exports = {
