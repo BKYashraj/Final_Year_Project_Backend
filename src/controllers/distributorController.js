@@ -1,4 +1,6 @@
 const { registerDistributor } = require("../services/distributorService");
+const EthanolLot = require('../schema/EthanolLot.js'); // Assuming this model exists
+const Factory = require('../schema/factorySchema.js');
 
 async function createDistributor(req, res) {
   try {
@@ -19,6 +21,27 @@ async function createDistributor(req, res) {
   }
 }
 
+async function getAllEthanolLots(req, res) {
+  try {
+    const lots = await EthanolLot.find(); // No populate here
+    res.status(200).json({
+      success: true,
+      message: "Fetched all ethanol lots",
+      data: { lots }
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Error fetching lots",
+      error: error.message
+    });
+  }
+}
+
 module.exports = {
   createDistributor,
+  getAllEthanolLots
 };
+
+
+

@@ -1,11 +1,9 @@
 const express = require('express')  // dependancies call
-
 const cors = require('cors')
-
-
 const bodyParser = require('body-parser')
 const ServerConfig = require('./config/serverConfig')
 const connectDB = require('./config/dbConfig')
+
 const farmerRouter = require('./routes/farmerRoute')
 const factoryRouter = require('./routes/factoryRoute')
 const distributorRouter = require('./routes/distributorRoute')
@@ -34,13 +32,15 @@ app.post('/ping', (req, res) => {
   return res.json({message:"pong"})
 });
 
-
+// app.post('/factory/addLot', (req, res) => {
+//   // Your logic to add a lot here
+//   res.json({ success: true, message: "Lot added" });
+// });
 
 app.use('/farmers', farmerRouter);
 app.use('/factory', factoryRouter);
 app.use('/distributor', distributorRouter);
 app.use('/payment', paymentRouter);
-
 app.use('/auth', authRouter);
 app.use("/api", predictRoute);
 
