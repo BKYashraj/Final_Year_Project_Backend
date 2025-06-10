@@ -71,7 +71,7 @@ async function getFarmersByFactory(req, res) {
 // ✅ Add Ethanol Lot
 async function addEthanolLot(req, res) {
   try {
-    const { quantity, pricePerLiter, productionDate, location, factoryId } = req.body;
+    const { quantity, pricePerLiter, productionDate, location, factoryId, name } = req.body;
 
     if (!factoryId) {
       return res.status(400).json({
@@ -88,6 +88,7 @@ async function addEthanolLot(req, res) {
       pricePerLiter,
       productionDate,
       location,
+      name
     });
 
     await newLot.save();

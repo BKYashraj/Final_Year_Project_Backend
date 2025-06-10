@@ -11,6 +11,7 @@ const ethanolLotSchema = new mongoose.Schema({
   pricePerLiter: Number,
   productionDate: Date,
   location: String,
+  name: String,
   isSold: {
     type: Boolean,
     default: false
