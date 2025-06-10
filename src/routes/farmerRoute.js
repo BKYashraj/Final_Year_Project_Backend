@@ -1,5 +1,5 @@
 const express = require('express');  // dependancies call 
-const { createFarmer, getAllFarmers, approveFarmer2, approveFarmer, getApprovedFactory, getAllApprovedFarmers } = require('../controllers/farmerController');
+const { createFarmer, getAllFarmers, approveFarmer2, getPreveousOrders, approveFarmer, getApprovedFactory, getAllApprovedFarmers } = require('../controllers/farmerController');
 const farmerRouter = express.Router()
 
 farmerRouter.post('/',createFarmer);
@@ -11,6 +11,7 @@ farmerRouter.get('/getFarmer',getAllFarmers);
 
 farmerRouter.post('/approve-factory',approveFarmer);
 
+farmerRouter.get('/PreveousOrders/:id', getPreveousOrders);
 // this is for factor send request to factory level 2
 farmerRouter.put('/farmerapprovefactory/:id',approveFarmer2);
 

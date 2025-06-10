@@ -4,7 +4,7 @@ const { registerFactory } = require("../services/factoryService");
 const { registerFarmer, AppFactory } = require("../services/farmerService");
 const Farmer = require("../schema/farmerSchema.js");
 const EthanolLot = require("../schema/EthanolLot.js");
-
+const Transaction = require("../schema/transactionSchema.js"); 
 // ✅ Create Factory
 async function createFactory(req, res) {
   try {
@@ -141,9 +141,39 @@ async function getEthanolLotsByFactory(req, res) {
   }
 }
 
+async function getPreveousOrders(req, res) {
+  try {
+    console.log(req.body);
+    const factoryId = req.params.id;
+    console.log("Farmer ID:", factoryId);
+
+    // Find all payments related to the farmer
+    const response = await Transaction.find({ factoryId });
+
+    console.log("Transaction History:", response);
+
+    if (!response || response.length === 0) {
+      return res.status(404).json({ message: "No transactions found for this farmer." });
+    }
+
+    res.status(200).json({ success: true, transactions: response });
+  } catch (error) {
+    // Determine the status code to use
+    const statusCode = (error.statusCode >= 100 && error.statusCode < 600) ? error.statusCode : 500;
+
+    return res.status(statusCode).json({
+      success: false,
+      message: error.reason || "An unexpected error occurred.",
+      data: {},
+      error: error,
+    });
+  }
+}
+
 module.exports = {
   createFactory,
   getFarmersByFactory,
   addEthanolLot,
- getEthanolLotsByFactory
+ getEthanolLotsByFactory,
+ getPreveousOrders
 };

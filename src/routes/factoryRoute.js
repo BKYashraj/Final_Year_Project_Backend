@@ -1,6 +1,6 @@
 // src/routes/factoryRoute.js
 const express = require('express');  // dependencies call
-const { createFactory, getFarmersByFactory } = require('../controllers/factoryController');
+const { createFactory, getPreveousOrders, getFarmersByFactory } = require('../controllers/factoryController');
 const { addEthanolLot,getEthanolLotsByFactory } = require('../controllers/factoryController'); // Confirm this is the right file
 const factoryRouter = express.Router();
 const authenticate = require('../middlewares/authMiddleware');
@@ -14,5 +14,8 @@ factoryRouter.get('/getApprovedFarmer/:id', getFarmersByFactory);
 factoryRouter.post('/addLot',addEthanolLot);
 factoryRouter.get("/getLots/:factoryId", getEthanolLotsByFactory);
 
+
+
+factoryRouter.get('/PreveousOrders/:id', getPreveousOrders);
 
 module.exports = factoryRouter;

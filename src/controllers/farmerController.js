@@ -1,6 +1,7 @@
 const { registerFarmer, AppFactory } = require("../services/farmerService");
 const Farmer = require("../schema/farmerSchema.js"); 
 const { AppFarmer, approveFarmerFactory } = require("../repositories/farmerRepository.js");
+const Transaction = require("../schema/transactionSchema.js"); 
 
 async function createFarmer(req, res) {
   try {
@@ -44,6 +45,7 @@ async function getAllFarmers(req, res) {
 }
 
 const mongoose = require('mongoose');
+const transactionSchema = require("../schema/transactionSchema.js");
 
 async function getAllApprovedFarmers(req, res) {
   try {
@@ -153,6 +155,34 @@ async function getApprovedFactory(req, res) {
   }
 }
 
+async function getPreveousOrders(req, res) {
+  try {
+    console.log(req.body);
+    const farmerId = req.params.id;
+    console.log("Farmer ID:", farmerId);
+
+    // Find all payments related to the farmer
+    const response = await Transaction.find({ farmerId });
+
+    console.log("Transaction History:", response);
+
+    if (!response || response.length === 0) {
+      return res.status(404).json({ message: "No transactions found for this farmer." });
+    }
+
+    res.status(200).json({ success: true, transactions: response });
+  } catch (error) {
+    // Determine the status code to use
+    const statusCode = (error.statusCode >= 100 && error.statusCode < 600) ? error.statusCode : 500;
+
+    return res.status(statusCode).json({
+      success: false,
+      message: error.reason || "An unexpected error occurred.",
+      data: {},
+      error: error,
+    });
+  }
+}
 
 
 
@@ -164,5 +194,6 @@ module.exports = {
   approveFarmer,
   getApprovedFactory,
   getAllApprovedFarmers,
-  approveFarmer2
+  approveFarmer2,
+  getPreveousOrders
 }
