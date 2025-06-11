@@ -92,7 +92,7 @@ app.post('/transparency', async (req, res) => {
 
 app.listen(ServerConfig.PORT, async () => {
   await connectDB();
-  console.log(`Example app listening on port ${ServerConfig.PORT}...`)
+  console.log(`Example app listenon port ${ServerConfig.PORT}...`)
 })
 
 // git remote add new-origin <new_repository_url>
