@@ -78,7 +78,8 @@ app.post('/transparency', async (req, res) => {
        res.json({
          farmer,
          factory,
-         distributor
+         distributor,
+         tx
        });
    
   //    } catch (err) {
