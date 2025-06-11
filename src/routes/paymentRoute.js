@@ -78,7 +78,7 @@ paymentRouter.post('/order', async (req, res) => {
 
 // ROUTE 3: Verify Payment & Automate Payout
 paymentRouter.post('/verify', async (req, res) => {
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, farmerId, factoryId } = req.body;
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, farmerId, factoryId, amount} = req.body;
 
     try {
         const sign = razorpay_order_id + "|" + razorpay_payment_id;
@@ -124,7 +124,10 @@ paymentRouter.post('/verify', async (req, res) => {
                     farmerId,
                     factoryId,
                     transactionHash,
-                    blockNo
+                    blockNo,
+                    amount,
+                    status: "Successfull",
+                    // paymentId: order.id,
                 });
 
                 await transparency.save();

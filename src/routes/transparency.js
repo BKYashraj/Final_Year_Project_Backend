@@ -1,31 +1,14 @@
-const express = require('express');  // dependancies call 
-const { createFarmer, getAllFarmers, approveFarmer2, getPreveousOrders, approveFarmer, getApprovedFactory, getAllApprovedFarmers, getRecentOrders } = require('../controllers/farmerController');
-const farmerRouter = express.Router()
+// routes/transparency.js
+
+const express = require('express');
+const router = express.Router();
 const Farmer = require('../schema/farmerSchema');
 const Factory = require('../schema/factorySchema');
 const Transparency = require('../schema/transparencyDistributorToFactory');
 const Distributor = require('../schema/distributorSchema')
 
-farmerRouter.post('/',createFarmer);
-
-// this is for farmer login send proposal
-farmerRouter.get('/approvedFarmer/:id',getAllApprovedFarmers);
-
-farmerRouter.get('/getFarmer',getAllFarmers);
-
-farmerRouter.post('/approve-factory',approveFarmer);
-
-farmerRouter.get('/PreveousOrders/:id', getPreveousOrders);
-// this is for factor send request to factory level 2
-farmerRouter.put('/farmerapprovefactory/:id',approveFarmer2);
-
-farmerRouter.get('/:id',getApprovedFactory);
-
-
-farmerRouter.get('/recentOrder/:id', getRecentOrders);
-
-
-farmerRouter.post('/fecth', async (req, res) => {
+// collection that stores distributorId with factoryId
+router.post('/fecth', async (req, res) => {
   const { farmerId, factoryId } = req.body;
 
   try {
@@ -54,5 +37,4 @@ farmerRouter.post('/fecth', async (req, res) => {
   }
 });
 
-
-module.exports = farmerRouter;
+module.exports = router;

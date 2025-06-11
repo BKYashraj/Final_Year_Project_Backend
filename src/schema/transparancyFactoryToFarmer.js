@@ -1,10 +1,13 @@
 const mongoose = require('mongoose');
 
 const transparencyFactoryToFarmer = new mongoose.Schema({
-    farmerId: { type: String, required: true },
-    factoryId: { type: String, required: true },
-    transactionHash: { type: String, required: true },
-    blockNo: { type: String, required: true },
+    farmerId: { type: String },
+    factoryId: { type: String },
+    transactionHash: { type: String },
+    blockNo: { type: String },
+    amount: { type: Number },
+    status: { type: String, default: 'Pending' },  // Example: "Successful", "Failed"
+    paymentId: { type: String },
 }, {
     timestamps: true
 });

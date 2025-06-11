@@ -1,3 +1,8 @@
+const Farmer = require('./schema/farmerSchema');
+const Factory = require('./schema/factorySchema');
+const Transparency = require('./schema/transparencyDistributorToFactory');
+const Distributor = require('./schema/distributorSchema.js')
+
 const express = require('express')  // dependancies call
 const cors = require('cors')
 const bodyParser = require('body-parser')
@@ -12,6 +17,8 @@ const distributorPayment =  require('./routes/Distributor_payment.js')
 const predictRoute = require("./routes/predictRoute.js");
 const cookieParser = require('cookie-parser')
 const authRouter = require('./routes/authRoute')
+
+const transparency_route = require('./routes/transparency.js')
 const app = express() // Got express server object
 
 // If request is in JSON, text, urlencoded it correctly reads by Express Server
@@ -45,6 +52,41 @@ app.use('/payment', paymentRouter);
 app.use('/distributor_payment', distributorPayment);
 app.use('/auth', authRouter);
 app.use("/api", predictRoute);
+
+
+app.post('/transparency', async (req, res) => {
+  const { farmerId, factoryId } = req.body;
+  console.log(farmerId);
+  
+   
+  //      // Replace with your DB logic
+       const farmer = await Farmer.findById(farmerId);
+       const factory = await Factory.findById(factoryId);
+       const tx = await Transparency.findOne({ factoryId })
+       
+       console.log("dist")
+       console.log(tx.distributorId);
+       const id = tx.distributorId;
+      // const distributor = await Distributor.findOne({ factoryId });
+   
+      //  if (!farmer || !factory || !distributor) {
+      //    return res.status(404).json({ message: 'One or more entities not found' });
+      //  }
+      const distributor = await Distributor.findById(id);
+
+      console.log(distributor)
+       res.json({
+         farmer,
+         factory,
+         distributor
+       });
+   
+  //    } catch (err) {
+  //      console.error(err);
+  //      res.status(500).json({ message: 'Server error' });
+  //    }
+});
+
 
 
 app.listen(ServerConfig.PORT, async () => {
