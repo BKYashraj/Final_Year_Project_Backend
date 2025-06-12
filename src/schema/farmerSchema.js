@@ -20,7 +20,7 @@ const farmerSchema = new mongoose.Schema({
         trim: true,
         minlength: [10, "Phone number should be 10 digits"],
         maxlength: [10, "Phone number should be 10 digits"],
-        unique: [true, "Phone number is already in use"],
+        // unique: [true, "Phone number is already in use"],
         required: [true, "Phone number is required"]
     },
     email: {
@@ -38,13 +38,13 @@ const farmerSchema = new mongoose.Schema({
     aadharNumber: {
         type: String,
         required: [true, "Aadhar Number is required"],
-        unique: [true, "Aadhar Number already exists"],
-        match: [/^\d{12}$/, "Aadhar Number must be exactly 12 digits"]
+        // unique: [true, "Aadhar Number already exists"],
+        // match: [/^\d{12}$/, "Aadhar Number must be exactly 12 digits"]
     },
     farmerId: {
         type: String,
         required: [true, "Farmer ID (Krishi Card, PM-Kisan Registration Number, etc.) is required"],
-        unique: true,
+        // unique: true,
         trim: true
     },
     gatNo: {

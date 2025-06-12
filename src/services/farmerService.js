@@ -46,28 +46,24 @@ async function registerFarmer(userDetails) {
 
 async function AppFactory(farmerId) {
   try {
-    // Step 1: Find the farmer and populate factoryId in approvedFactories
     const farmer = await Farmer.findById(farmerId).populate('approvedFactories.factoryId');
 
     if (!farmer) {
       return { success: false, message: 'Farmer not found' };
     }
 
-    // Step 2: Filter only entries where status is "pending"
-    const pendingFactoriesEntries = farmer.approvedFactories.filter(
-      entry => entry.status === 'pending'
-    );
+    const factories = farmer.approvedFactories
+      .filter(entry => entry.status === 'pending' && entry.factoryId) // safety check
+      .map(entry => entry.factoryId);
 
-    // Step 3: Extract factory objects from those pending entries
-    const factories = pendingFactoriesEntries.map(entry => entry.factoryId);
-
-    // Step 4: Return the pending factory list
     return { success: true, factories };
   } catch (error) {
     console.error('Error fetching farmer:', error);
     return { success: false, message: 'Server error' };
   }
 }
+
+
 
 
 
